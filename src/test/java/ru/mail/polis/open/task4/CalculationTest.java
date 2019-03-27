@@ -10,6 +10,11 @@ public class CalculationTest {
 
     @Test
     void validCalculation() {
+        assertEquals(5,calculationTest.build("3/3*5").evaluate());
+        assertEquals(3,calculationTest.build("5*2/3").evaluate());
+        assertEquals(13,calculationTest.build("(2+2)*3+1").evaluate());
+        assertEquals(126,calculationTest.build("(4*3+2)*(4+5)").evaluate());
+        assertEquals(16400,calculationTest.build("(2^(3*4)+4)*4").evaluate());
         assertEquals(-1,calculationTest.build("-3+2").evaluate());
         assertEquals(2,calculationTest.build("2*(-3+2)^2").evaluate());
         //assertEquals(0,calculationTest.build("2—2").evaluate());
@@ -51,5 +56,8 @@ public class CalculationTest {
             () -> calculationTest.build("(2+3)/").evaluate()
         );
     }
+
+
+
 
 }
