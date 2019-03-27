@@ -65,13 +65,13 @@ public class Calculation implements ExprBuilder {
             }
             if (bracketCounter == 0) {
                 if (input.charAt(i) == PLUS) {
-                    stack.push(input.substring(i+1));
-                    stack.push(input.substring(0,i));
+                    stack.push(input.substring(i + 1));
+                    stack.push(input.substring(0, i));
                     return new Add(parse(stack.pop()), parse(stack.pop()));
                 }
                 if (input.charAt(i) == MINUS) {
-                    stack.push(input.substring(i+1));
-                    stack.push(input.substring(0,i));
+                    stack.push(input.substring(i + 1));
+                    stack.push(input.substring(0, i));
                     return new Subtraction(parse(stack.pop()), parse(stack.pop()));
                 }
             }
@@ -85,7 +85,7 @@ public class Calculation implements ExprBuilder {
 
     Expr multDivide(String input) {
 
-        for (int i = input.length()-1; i >= 0; i--) {
+        for (int i = input.length() - 1; i >= 0; i--) {
             if (input.charAt(i) == OPEN_BRACKET) {
                 bracketCounter++;
             }
@@ -94,13 +94,13 @@ public class Calculation implements ExprBuilder {
             }
             if (bracketCounter == 0) {
                 if (input.charAt(i) == MULTIPLY) {
-                    stack.push(input.substring(i+1));
-                    stack.push(input.substring(0,i));
+                    stack.push(input.substring(i + 1));
+                    stack.push(input.substring(0, i));
                     return new Multiplication(parse(stack.pop()), parse(stack.pop()));
                 }
                 if (input.charAt(i) == DIVIDE) {
-                    stack.push(input.substring(i+1));
-                    stack.push(input.substring(0,i));
+                    stack.push(input.substring(i + 1));
+                    stack.push(input.substring(0, i));
                     return new Division(parse(stack.pop()), parse(stack.pop()));
                 }
             }
@@ -111,8 +111,8 @@ public class Calculation implements ExprBuilder {
     Expr power(String input) {
         for (int i = 0; i < input.length(); i++) {
             if (input.charAt(i) == POWER) {
-                stack.push(input.substring(i+1));
-                stack.push(input.substring(0,i));
+                stack.push(input.substring(i + 1));
+                stack.push(input.substring(0, i));
                 return new Power(parse(stack.pop()), parse(stack.pop()));
             }
         }
