@@ -17,4 +17,18 @@ public class Multiplication implements Expr {
     public int evaluate() {
         return left.evaluate() * right.evaluate();
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        Multiplication that = (Multiplication) o;
+        return Objects.equals(left, that.left)
+                && Objects.equals(right, that.right);
+    }
+
 }

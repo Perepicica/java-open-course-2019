@@ -18,4 +18,17 @@ public class Division implements Expr {
         return left.evaluate() / right.evaluate();
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        Division division = (Division) o;
+        return Objects.equals(left, division.left)
+                && Objects.equals(right, division.right);
+    }
+
 }
