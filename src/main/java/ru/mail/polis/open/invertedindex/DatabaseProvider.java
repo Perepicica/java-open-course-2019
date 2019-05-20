@@ -32,6 +32,10 @@ public class DatabaseProvider {
 
     static Set<String> selectRequest(String request) throws SQLException {
         String lower = request.toLowerCase();
+        int beginning = request.indexOf("https://");
+        if (beginning == 0 && !request.contains(" ")) {
+            return selectWords(request);
+        }
         String newReq = lower.replaceAll("[^a-zA-Z0-9а-яА-Я]", " ");
         String[] words = newReq.split("[ ]+");
         for (int i = 0; i < words.length; i++) {
@@ -162,7 +166,17 @@ public class DatabaseProvider {
                         .append("}'::jsonb]);");
                 statementInsert.addBatch(sql.toString());
             }
+            sql.delete(0, sql.length());
+            sql.append("INSERT INTO word_url (word, url,repeat) VALUES('")
+                    .append(word.getWord())
+                    .append("','")
+                    .append(url)
+                    .append("',")
+                    .append(word.getNumberOfRepetitions())
+                    .append(");");
+            statementInsert.addBatch(sql.toString());
         }
+
         statementInsert.executeBatch();
         DbConnection.getConnection().commit();
         sql.delete(0, sql.length());
@@ -199,21 +213,19 @@ public class DatabaseProvider {
         return true;
     }
 
-    static boolean updateIndex() throws SQLException {
+    static Set<String> selectWords(String url) throws SQLException {
         Statement statement = DbConnection.getConnection().createStatement();
-        DbConnection.getConnection().setAutoCommit(false);
-        StringBuilder sql = new StringBuilder();
-        sql.append("CREATE INDEX words_idx ON words USING GIN (to_tsvector('english', word))");
-        try {
-            statement.executeBatch();
-            DbConnection.getConnection().commit();
-            statement.close();
-        } catch (SQLException e) {
-            return false;
+        HashSet<String> result = new LinkedHashSet<>();
+        String check = "Select url from url where url like '" + url + "%'";
+        String request = "Select word,repeat from word_url where url like '" + url + "%'";
+        ResultSet rs = statement.executeQuery(check);
+        if (rs.isBeforeFirst()) {
+            rs = statement.executeQuery(request);
+            while (rs.next()) {
+                result.add("\"" + rs.getString("word") + "\"" + " repeated " + rs.getString("repeat") + " times");
+            }
         }
-        statement.close();
-        return true;
+        return result;
     }
-
 
 }
